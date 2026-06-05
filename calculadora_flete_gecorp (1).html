@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Flete — Gecorp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#0E1117;--bg2:#161B25;--bg3:#1E2535;
+  --border:#2A3347;--border2:#3A4560;
+  --text:#E8EDF5;--text2:#8A96AA;--text3:#5A6478;
+  --green:#2ECC8F;--green-bg:rgba(46,204,143,.12);--green-border:rgba(46,204,143,.3);
+  --amber:#F5A623;--amber-bg:rgba(245,166,35,.1);--amber-border:rgba(245,166,35,.3);
+  --red:#E55353;--red-bg:rgba(229,83,83,.1);--red-border:rgba(229,83,83,.3);
+  --blue:#5B9CF6;--blue-bg:rgba(91,156,246,.1);--blue-border:rgba(91,156,246,.3);
+  --accent:#5B9CF6;--radius:8px;--radius-lg:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Sora',sans-serif;font-size:13px;min-height:100vh;padding-bottom:4rem}
+.header{background:var(--bg2);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100}
+.logo{width:32px;height:32px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-weight:500;font-size:13px;color:#fff;flex-shrink:0}
+.header-title{font-size:14px;font-weight:600}
+.header-sub{font-size:11px;color:var(--text2);margin-top:1px}
+.header-right{margin-left:auto;font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)}
+.main{max-width:900px;margin:0 auto;padding:2rem 1.5rem}
+
+/* Add client form */
+.add-form{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem 1.25rem;margin-bottom:1rem}
+.add-form-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:10px;align-items:end;margin-top:.65rem}
+.field label{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:.35rem}
+.field input,.field select{width:100%;font-size:13px;font-family:'Sora',sans-serif;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);padding:6px 10px;transition:border-color .2s}
+.field input:focus,.field select:focus{outline:none;border-color:var(--accent)}
+.field select option{background:var(--bg3)}
+.btn-primary{font-size:13px;font-family:'Sora',sans-serif;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);padding:7px 18px;cursor:pointer;white-space:nowrap;transition:opacity .2s;height:34px}
+.btn-primary:hover{opacity:.85}
+
+/* Route bar */
+.route-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1rem}
+.route-stat{background:var(--bg2);padding:.9rem 1.1rem}
+.route-stat .lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;font-family:'DM Mono',monospace;margin-bottom:.3rem}
+.route-stat .val{font-size:18px;font-weight:600;color:var(--text);font-family:'DM Mono',monospace}
+.route-stat .val.muted{color:var(--text3);font-size:14px}
+
+/* Table */
+.table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1rem}
+table{width:100%;border-collapse:collapse}
+thead th{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;font-family:'DM Mono',monospace;padding:.75rem 1rem;border-bottom:1px solid var(--border);text-align:left;background:var(--bg3)}
+thead th:not(:first-child){text-align:right}
+tbody td{padding:.85rem 1rem;border-bottom:1px solid var(--border);vertical-align:middle}
+tbody td:not(:first-child){text-align:right}
+tbody tr:last-child td{border-bottom:none}
+tbody tr.lup-row{background:rgba(91,156,246,.04)}
+tbody tr:hover:not(.total-row){background:rgba(255,255,255,.015)}
+tbody tr.total-row{background:var(--bg3)}
+tbody tr.total-row td{color:var(--text2);font-family:'DM Mono',monospace;font-size:12px;border-top:1px solid var(--border2)}
+.client-name{font-weight:500;display:flex;align-items:center;gap:.5rem}
+.km-badge{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;background:var(--bg3);padding:2px 7px;border-radius:20px;border:1px solid var(--border)}
+.pal-sub{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px}
+.flete-val{font-family:'DM Mono',monospace;font-weight:500;font-size:13px;color:var(--green)}
+.frac-val{font-family:'DM Mono',monospace;font-size:12px;color:var(--text2)}
+.monto-val{font-family:'DM Mono',monospace;font-size:13px}
+.kpi-pill{display:inline-block;font-size:10px;font-family:'DM Mono',monospace;font-weight:600;padding:3px 8px;border-radius:20px;letter-spacing:.03em}
+.kpi-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.kpi-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+.kpi-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.kpi-gray{background:var(--bg3);color:var(--text3);border:1px solid var(--border)}
+.truck-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-family:'DM Mono',monospace;font-weight:500;padding:3px 10px;border-radius:20px}
+.b-chico{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.b-grande{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border)}
+.btn-del{background:none;border:none;cursor:pointer;color:var(--text3);font-size:14px;padding:2px 6px;border-radius:4px;transition:color .15s}
+.btn-del:hover{color:var(--red)}
+.empty{text-align:center;padding:3rem 2rem;color:var(--text3)}
+.empty i{font-size:36px;display:block;margin-bottom:.75rem;opacity:.4}
+.empty p{font-size:13px}
+.footer{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border)}
+.footer-note{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace}
+.rbtn{font-size:12px;color:var(--text3);background:none;border:1px solid var(--border);border-radius:var(--radius);padding:5px 12px;cursor:pointer;font-family:'Sora',sans-serif;transition:all .2s}
+.rbtn:hover{border-color:var(--border2);color:var(--text2)}
+@media(max-width:640px){
+  .main{padding:1rem}
+  .route-bar{grid-template-columns:1fr 1fr}
+  .add-form-grid{grid-template-columns:1fr 1fr}
+  .header{padding:.75rem 1rem}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">GC</div>
+  <div>
+    <div class="header-title">Calculadora de Flete</div>
+    <div class="header-sub">Distribución de costo por ruta · Comercial Lúpulos</div>
+  </div>
+  <div class="header-right" id="header-date"></div>
+</div>
+
+<div class="main">
+
+  <!-- Add client form -->
+  <div class="add-form">
+    <p style="font-size:11px;font-weight:600;color:var(--text3);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.07em">Agregar cliente a la ruta</p>
+    <div class="add-form-grid">
+      <div class="field">
+        <label>Cliente</label>
+        <select id="f-cliente" onchange="onClienteChange()">
+          <option value="">Seleccionar…</option>
+          <option value="Comercial Lúpulos|209">Comercial Lúpulos — 209 km</option>
+          <option value="Rescate Brebajes|237">Rescate Brebajes — 237 km</option>
+          <option value="Derek Way|209">Derek Way — 209 km</option>
+          <option value="Bordelago|221">Bordelago — 221 km</option>
+          <option value="Rudy Plagemann|267">Rudy Plagemann — 267 km</option>
+          <option value="Totoral|186">Totoral — 186 km</option>
+          <option value="Greed|112">Greed — 112 km</option>
+          <option value="Juan F. Cartes|112">Juan F. Cartes — 112 km</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Monto neto cotización</label>
+        <input type="number" id="f-monto" placeholder="0" min="0" step="100000">
+      </div>
+      <div class="field">
+        <label>Kg insumos (maltas+lúpulos)</label>
+        <input type="number" id="f-kg" placeholder="0" min="0" step="100" oninput="updateKgHint()">
+      </div>
+      <div class="field">
+        <label>Unidades de lata</label>
+        <input type="number" id="f-lata" placeholder="0" min="0" step="3890" oninput="updateLataHint()">
+      </div>
+      <button class="btn-primary" onclick="addClient()">
+        <i class="ti ti-plus" style="font-size:13px;vertical-align:-2px;margin-right:4px"></i>Agregar
+      </button>
+    </div>
+    <p style="font-size:11px;color:var(--text3);margin-top:.5rem;font-family:'DM Mono',monospace" id="pallet-hint"></p>
+  </div>
+
+  <!-- Route summary -->
+  <div class="route-bar">
+    <div class="route-stat"><div class="lbl">Km totales</div><div class="val muted" id="stat-km">—</div></div>
+    <div class="route-stat"><div class="lbl">Flete total</div><div class="val muted" id="stat-ft">—</div></div>
+    <div class="route-stat"><div class="lbl">Pallets totales</div><div class="val muted" id="stat-pal">—</div></div>
+    <div class="route-stat"><div class="lbl">Camión</div><div class="val muted" id="stat-camion">—</div></div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Monto neto</th>
+          <th>Pallets</th>
+          <th>% ruta</th>
+          <th>Flete a cobrar</th>
+          <th>KPI</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="client-tbody">
+        <tr><td colspan="7"><div class="empty">
+          <i class="ti ti-route"></i>
+          <p>Agrega los clientes de la ruta para calcular el flete</p>
+        </div></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    <span class="footer-note">Chico $1.450/km · Grande $1.650/km · Km ruta = parada más lejana</span>
+    <button class="rbtn" onclick="resetAll()">
+      <i class="ti ti-refresh" style="font-size:12px;vertical-align:-1px;margin-right:4px"></i>Reiniciar
+    </button>
+  </div>
+
+</div>
+
+<script>
+const T_CH=1450, T_GR=1650, KG_P=1000, UN_P=3890;
+const fmt=n=>'$'+Math.round(n).toLocaleString('es-CL');
+const fmtP=n=>(n*100).toFixed(2).replace('.',',')+'%';
+function tipoCamion(pe,pl){return(pl<=3&&(pe+pl)<=4)?'CHICO':'GRANDE'}
+
+let clients=[];
+
+function updateKgHint(){
+  const kg=parseFloat(document.getElementById('f-kg').value)||0;
+  const lata=parseFloat(document.getElementById('f-lata').value)||0;
+  const pe=kg>0?Math.ceil(kg/KG_P):0;
+  const pl=lata>0?Math.ceil(lata/UN_P):0;
+  const hints=[];
+  if(pe>0) hints.push(pe+' pallet'+(pe>1?'s':'')+' estándar');
+  if(pl>0) hints.push(pl+' pallet'+(pl>1?'s':'')+' lata');
+  document.getElementById('pallet-hint').textContent=hints.length?'→ '+hints.join(' + '):'';
+}
+function updateLataHint(){updateKgHint()}
+function onClienteChange(){
+  // Auto-focus monto after selecting client
+  const v=document.getElementById('f-cliente').value;
+  if(v) document.getElementById('f-monto').focus();
+}
+
+function addClient(){
+  const sel=document.getElementById('f-cliente').value;
+  if(!sel){alert('Selecciona un cliente');return}
+  const [nombre,kmStr]=sel.split('|');
+  const km=parseInt(kmStr);
+  const monto=parseFloat(document.getElementById('f-monto').value)||0;
+  const kg=parseFloat(document.getElementById('f-kg').value)||0;
+  const lata=parseFloat(document.getElementById('f-lata').value)||0;
+  const pe=kg>0?Math.ceil(kg/KG_P):0;
+  const pl=lata>0?Math.ceil(lata/UN_P):0;
+
+  // Replace if same client already added
+  const idx=clients.findIndex(c=>c.nombre===nombre);
+  const entry={nombre,km,monto,pe,pl};
+  if(idx>=0) clients[idx]=entry;
+  else clients.push(entry);
+
+  // Clear form
+  document.getElementById('f-cliente').value='';
+  document.getElementById('f-monto').value='';
+  document.getElementById('f-kg').value='';
+  document.getElementById('f-lata').value='';
+  document.getElementById('pallet-hint').textContent='';
+
+  render();
+}
+
+function removeClient(i){
+  clients.splice(i,1);
+  render();
+}
+
+function render(){
+  const tbody=document.getElementById('client-tbody');
+  if(!clients.length){
+    tbody.innerHTML='<tr><td colspan="7"><div class="empty"><i class="ti ti-route"></i><p>Agrega los clientes de la ruta para calcular el flete</p></div></td></tr>';
+    ['stat-km','stat-ft','stat-pal'].forEach(id=>{const e=document.getElementById(id);e.textContent='—';e.classList.add('muted')});
+    document.getElementById('stat-camion').innerHTML='<span style="color:var(--text3);font-size:14px">—</span>';
+    return;
+  }
+
+  const totalPe=clients.reduce((s,c)=>s+c.pe,0);
+  const totalPl=clients.reduce((s,c)=>s+c.pl,0);
+  const totalPal=totalPe+totalPl;
+  const kmMax=Math.max(...clients.map(c=>c.km));
+  const tipo=tipoCamion(totalPe,totalPl);
+  const tarifa=tipo==='CHICO'?T_CH:T_GR;
+  const ftTotal=kmMax*tarifa;
+
+  const sk=document.getElementById('stat-km'); sk.textContent=kmMax+' km'; sk.classList.remove('muted');
+  const sf=document.getElementById('stat-ft'); sf.textContent=fmt(ftTotal); sf.classList.remove('muted');
+  const sp=document.getElementById('stat-pal'); sp.textContent=totalPal||'—'; sp.classList.remove('muted');
+  document.getElementById('stat-camion').innerHTML=
+    `<span class="truck-badge ${tipo==='CHICO'?'b-chico':'b-grande'}"><i class="ti ti-truck"></i> ${tipo==='CHICO'?'Chico':'Grande'}</span>`;
+
+  tbody.innerHTML='';
+  clients.forEach((c,i)=>{
+    const pal=c.pe+c.pl;
+    const frac=totalPal>0?pal/totalPal:0;
+    const flete=Math.round(ftTotal*frac);
+    const kpiVal=c.monto>0?flete/c.monto:null;
+    let kpiHtml='<span class="kpi-pill kpi-gray">—</span>';
+    if(kpiVal!==null){
+      if(kpiVal<=0.03) kpiHtml=`<span class="kpi-pill kpi-green">${fmtP(kpiVal)}</span>`;
+      else if(kpiVal<=0.06) kpiHtml=`<span class="kpi-pill kpi-amber">${fmtP(kpiVal)}</span>`;
+      else kpiHtml=`<span class="kpi-pill kpi-red">${fmtP(kpiVal)}</span>`;
+    }
+    const isLup=c.nombre.toLowerCase().includes('lúpulos')||c.nombre.toLowerCase().includes('lupulos');
+    const tr=document.createElement('tr');
+    if(isLup) tr.className='lup-row';
+    tr.innerHTML=`
+      <td><div class="client-name">
+        ${isLup?'<i class="ti ti-star" style="font-size:12px;color:var(--amber)"></i>':''}
+        ${c.nombre}<span class="km-badge">${c.km} km</span>
+      </div></td>
+      <td class="monto-val">${c.monto>0?fmt(c.monto):'<span style="color:var(--text3)">—</span>'}</td>
+      <td><div>${pal>0?pal:'—'}</div><div class="pal-sub">${c.pe>0?c.pe+'M ':''} ${c.pl>0?c.pl+'L':''}</div></td>
+      <td class="frac-val">${totalPal>0?fmtP(frac):'—'}</td>
+      <td class="flete-val">${pal>0?fmt(flete):'—'}</td>
+      <td>${kpiHtml}</td>
+      <td><button class="btn-del" onclick="removeClient(${i})" title="Quitar cliente"><i class="ti ti-x"></i></button></td>`;
+    tbody.appendChild(tr);
+  });
+
+  // Totals
+  const totalMonto=clients.reduce((s,c)=>s+(c.monto||0),0);
+  const tr=document.createElement('tr');
+  tr.className='total-row';
+  tr.innerHTML=`<td>Total ruta</td>
+    <td>${totalMonto>0?fmt(totalMonto):'—'}</td>
+    <td>${totalPal}</td><td>100%</td>
+    <td style="font-family:'DM Mono',monospace;font-weight:500">${fmt(ftTotal)}</td>
+    <td></td><td></td>`;
+  tbody.appendChild(tr);
+}
+
+function resetAll(){
+  if(clients.length&&!confirm('¿Reiniciar la ruta?')) return;
+  clients=[];
+  render();
+}
+
+// Enter key on form fields triggers add
+['f-monto','f-kg','f-lata'].forEach(id=>{
+  document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')addClient()});
+});
+
+document.getElementById('header-date').textContent=
+  new Date().toLocaleDateString('es-CL',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+render();
+</script>
+</body>
+</html>
