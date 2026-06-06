@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora de Flete — Gecorp</title>
+<title>Calculadora de Flete Eladio — Gecorp</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
@@ -91,7 +91,7 @@ tbody tr.total-row td{color:var(--text2);font-family:'DM Mono',monospace;font-si
 <div class="header">
   <div class="logo">GC</div>
   <div>
-    <div class="header-title">Calculadora de Flete</div>
+    <div class="header-title">Calculadora de Flete Eladio</div>
     <div class="header-sub">Distribución de costo por ruta · Comercial Lúpulos</div>
   </div>
   <div class="header-right" id="header-date"></div>
@@ -137,9 +137,9 @@ tbody tr.total-row td{color:var(--text2);font-family:'DM Mono',monospace;font-si
 
   <div class="subsidy-bar">
     <i class="ti ti-info-circle" style="font-size:15px;color:var(--text3)"></i>
-    <span>Gecorp absorbe <strong>30%</strong> del flete</span>
+    <span>Gecorp absorbe <strong>25%</strong> del flete</span>
     <div class="sb-div"></div>
-    <span>El <strong>70%</strong> restante se divide: <strong>50%</strong> base fija por cliente + <strong>50%</strong> proporcional a pallets</span>
+    <span>El <strong>75%</strong> restante se divide: <strong>50%</strong> base fija por cliente + <strong>50%</strong> proporcional a pallets</span>
     <div class="sb-div"></div>
     <span>Pallet insumos: <strong>1.300 kg</strong> · Pallet lata: <strong>3.890 un.</strong></span>
   </div>
@@ -147,8 +147,8 @@ tbody tr.total-row td{color:var(--text2);font-family:'DM Mono',monospace;font-si
   <div class="route-bar">
     <div class="route-stat"><div class="lbl">Km totales</div><div class="val muted" id="stat-km">—</div></div>
     <div class="route-stat"><div class="lbl">Flete total</div><div class="val muted" id="stat-ft">—</div></div>
-    <div class="route-stat"><div class="lbl">Gecorp (30%)</div><div class="val muted" id="stat-subv">—</div></div>
-    <div class="route-stat"><div class="lbl">A clientes (70%)</div><div class="val muted" id="stat-dist">—</div></div>
+    <div class="route-stat"><div class="lbl">Gecorp (25%)</div><div class="val muted" id="stat-subv">—</div></div>
+    <div class="route-stat"><div class="lbl">A clientes (75%)</div><div class="val muted" id="stat-dist">—</div></div>
     <div class="route-stat"><div class="lbl">Camión</div><div class="val muted" id="stat-camion">—</div></div>
   </div>
 
@@ -176,7 +176,7 @@ tbody tr.total-row td{color:var(--text2);font-family:'DM Mono',monospace;font-si
   </div>
 
   <div class="footer">
-    <span class="footer-note">Chico $1.450/km · Grande $1.650/km · Base fija 50% + Variable pallets 50% del 70% distribuible</span>
+    <span class="footer-note">Chico $1.450/km · Grande $1.650/km · Base fija 50% + Variable pallets 50% del 75% distribuible</span>
     <button class="rbtn" onclick="resetAll()">
       <i class="ti ti-refresh" style="font-size:12px;vertical-align:-1px;margin-right:4px"></i>Reiniciar
     </button>
@@ -189,8 +189,8 @@ const T_CH  = 1450;   // $/km camión chico
 const T_GR  = 1650;   // $/km camión grande
 const KG_P  = 1300;   // kg máx por pallet insumos
 const UN_P  = 3890;   // un. por pallet lata
-const SUBV  = 0.30;   // Gecorp absorbe 30%
-const DIST  = 0.70;   // 70% va a clientes
+const SUBV  = 0.25;   // Gecorp absorbe 25%
+const DIST  = 0.75;   // 75% va a clientes
 const BASE_SHARE = 0.50; // del 70%: 50% base fija igual para todos
 const VAR_SHARE  = 0.50; // del 70%: 50% proporcional a pallets
 
