@@ -25,9 +25,7 @@ body{background:var(--bg);color:var(--text);font-family:'Sora',sans-serif;font-s
 .header-title{font-size:14px;font-weight:600}
 .header-sub{font-size:11px;color:var(--text2);margin-top:1px}
 .header-right{margin-left:auto;font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)}
-.main{max-width:960px;margin:0 auto;padding:2rem 1.5rem}
-
-/* Add form */
+.main{max-width:980px;margin:0 auto;padding:2rem 1.5rem}
 .add-form{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem 1.25rem;margin-bottom:1rem}
 .form-title{font-size:10px;font-weight:600;color:var(--text3);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.75rem}
 .add-form-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr auto;gap:10px;align-items:end}
@@ -38,20 +36,14 @@ body{background:var(--bg);color:var(--text);font-family:'Sora',sans-serif;font-s
 .btn-primary{font-size:13px;font-family:'Sora',sans-serif;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);padding:7px 18px;cursor:pointer;white-space:nowrap;transition:opacity .2s;height:34px}
 .btn-primary:hover{opacity:.85}
 .pallet-hint{font-size:11px;color:var(--text3);margin-top:.5rem;font-family:'DM Mono',monospace;min-height:16px}
-
-/* Subsidy info bar */
-.subsidy-bar{display:flex;align-items:center;gap:1rem;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:.7rem 1.1rem;margin-bottom:1rem;font-size:12px;color:var(--text2)}
+.subsidy-bar{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:.7rem 1.1rem;margin-bottom:1rem;font-size:12px;color:var(--text2)}
 .subsidy-bar strong{color:var(--text);font-family:'DM Mono',monospace}
-.subsidy-divider{width:1px;height:16px;background:var(--border2)}
-
-/* Route bar */
+.sb-div{width:1px;height:14px;background:var(--border2);flex-shrink:0}
 .route-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1rem}
 .route-stat{background:var(--bg2);padding:.85rem 1rem}
 .route-stat .lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;font-family:'DM Mono',monospace;margin-bottom:.3rem}
 .route-stat .val{font-size:16px;font-weight:600;color:var(--text);font-family:'DM Mono',monospace}
 .route-stat .val.muted{color:var(--text3);font-size:13px}
-
-/* Table */
 .table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1rem}
 table{width:100%;border-collapse:collapse}
 thead th{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;font-family:'DM Mono',monospace;padding:.7rem 1rem;border-bottom:1px solid var(--border);text-align:left;background:var(--bg3)}
@@ -62,11 +54,12 @@ tbody tr:last-child td{border-bottom:none}
 tbody tr.lup-row{background:rgba(91,156,246,.04)}
 tbody tr:hover:not(.total-row){background:rgba(255,255,255,.015)}
 tbody tr.total-row td{color:var(--text2);font-family:'DM Mono',monospace;font-size:12px;border-top:1px solid var(--border2);background:var(--bg3)}
-.client-name{font-weight:500;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.client-name{font-weight:500;display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
 .km-badge{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;background:var(--bg3);padding:2px 7px;border-radius:20px;border:1px solid var(--border)}
 .cotiz-badge{font-size:10px;color:var(--blue);font-family:'DM Mono',monospace;background:var(--blue-bg);padding:2px 7px;border-radius:20px;border:1px solid var(--blue-border)}
 .pal-sub{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px}
 .flete-val{font-family:'DM Mono',monospace;font-weight:600;font-size:13px;color:var(--green)}
+.flete-detail{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px}
 .frac-val{font-family:'DM Mono',monospace;font-size:12px;color:var(--text2)}
 .monto-val{font-family:'DM Mono',monospace;font-size:13px}
 .kpi-pill{display:inline-block;font-size:10px;font-family:'DM Mono',monospace;font-weight:600;padding:3px 8px;border-radius:20px;letter-spacing:.03em}
@@ -106,7 +99,6 @@ tbody tr.total-row td{color:var(--text2);font-family:'DM Mono',monospace;font-si
 
 <div class="main">
 
-  <!-- Add client form -->
   <div class="add-form">
     <p class="form-title">Agregar cotización a la ruta</p>
     <div class="add-form-grid">
@@ -143,26 +135,23 @@ tbody tr.total-row td{color:var(--text2);font-family:'DM Mono',monospace;font-si
     <p class="pallet-hint" id="pallet-hint"></p>
   </div>
 
-  <!-- Subsidy info -->
   <div class="subsidy-bar">
     <i class="ti ti-info-circle" style="font-size:15px;color:var(--text3)"></i>
-    <span>Gecorp subvenciona <strong>30%</strong> del flete total</span>
-    <div class="subsidy-divider"></div>
-    <span>El <strong>70%</strong> restante se distribuye entre clientes según pallets</span>
-    <div class="subsidy-divider"></div>
-    <span>Pallet insumos: hasta <strong>1.300 kg</strong> · Pallet lata: <strong>3.890 un.</strong></span>
+    <span>Gecorp absorbe <strong>30%</strong> del flete</span>
+    <div class="sb-div"></div>
+    <span>El <strong>70%</strong> restante se divide: <strong>50%</strong> base fija por cliente + <strong>50%</strong> proporcional a pallets</span>
+    <div class="sb-div"></div>
+    <span>Pallet insumos: <strong>1.300 kg</strong> · Pallet lata: <strong>3.890 un.</strong></span>
   </div>
 
-  <!-- Route summary -->
   <div class="route-bar">
     <div class="route-stat"><div class="lbl">Km totales</div><div class="val muted" id="stat-km">—</div></div>
     <div class="route-stat"><div class="lbl">Flete total</div><div class="val muted" id="stat-ft">—</div></div>
-    <div class="route-stat"><div class="lbl">Subvención Gecorp (30%)</div><div class="val muted" id="stat-subv">—</div></div>
-    <div class="route-stat"><div class="lbl">A distribuir (70%)</div><div class="val muted" id="stat-dist">—</div></div>
+    <div class="route-stat"><div class="lbl">Gecorp (30%)</div><div class="val muted" id="stat-subv">—</div></div>
+    <div class="route-stat"><div class="lbl">A clientes (70%)</div><div class="val muted" id="stat-dist">—</div></div>
     <div class="route-stat"><div class="lbl">Camión</div><div class="val muted" id="stat-camion">—</div></div>
   </div>
 
-  <!-- Table -->
   <div class="table-wrap">
     <table>
       <thead>
@@ -170,14 +159,15 @@ tbody tr.total-row td{color:var(--text2);font-family:'DM Mono',monospace;font-si
           <th>Cliente</th>
           <th>Monto neto</th>
           <th>Pallets</th>
-          <th>% ruta</th>
-          <th>Flete a cobrar</th>
-          <th>KPI flete/monto</th>
+          <th>Flete base</th>
+          <th>Flete variable</th>
+          <th>Flete total a cobrar</th>
+          <th>KPI Costo Gecorp / Monto</th>
           <th></th>
         </tr>
       </thead>
       <tbody id="client-tbody">
-        <tr><td colspan="7"><div class="empty">
+        <tr><td colspan="8"><div class="empty">
           <i class="ti ti-route"></i>
           <p>Agrega los clientes de la ruta para calcular el flete</p>
         </div></td></tr>
@@ -186,7 +176,7 @@ tbody tr.total-row td{color:var(--text2);font-family:'DM Mono',monospace;font-si
   </div>
 
   <div class="footer">
-    <span class="footer-note">Chico $1.450/km · Grande $1.650/km · Km ruta = parada más lejana · Gecorp absorbe 30% del flete</span>
+    <span class="footer-note">Chico $1.450/km · Grande $1.650/km · Base fija 50% + Variable pallets 50% del 70% distribuible</span>
     <button class="rbtn" onclick="resetAll()">
       <i class="ti ti-refresh" style="font-size:12px;vertical-align:-1px;margin-right:4px"></i>Reiniciar
     </button>
@@ -195,167 +185,161 @@ tbody tr.total-row td{color:var(--text2);font-family:'DM Mono',monospace;font-si
 </div>
 
 <script>
-// ── Constantes ───────────────────────────────────────────
-const T_CH    = 1450;   // $/km camión chico
-const T_GR    = 1650;   // $/km camión grande
-const KG_P    = 1300;   // kg máx por pallet de insumos
-const UN_P    = 3890;   // unidades por pallet de lata
-const SUBV    = 0.30;   // Gecorp subvenciona 30% del flete total
-const DIST    = 1 - SUBV; // 70% se distribuye entre clientes
+const T_CH  = 1450;   // $/km camión chico
+const T_GR  = 1650;   // $/km camión grande
+const KG_P  = 1300;   // kg máx por pallet insumos
+const UN_P  = 3890;   // un. por pallet lata
+const SUBV  = 0.30;   // Gecorp absorbe 30%
+const DIST  = 0.70;   // 70% va a clientes
+const BASE_SHARE = 0.50; // del 70%: 50% base fija igual para todos
+const VAR_SHARE  = 0.50; // del 70%: 50% proporcional a pallets
 
 const fmt  = n => '$' + Math.round(n).toLocaleString('es-CL');
 const fmtP = n => (n * 100).toFixed(2).replace('.', ',') + '%';
+function tipoCamion(pe, pl){ return (pl <= 3 && (pe + pl) <= 4) ? 'CHICO' : 'GRANDE' }
 
-function tipoCamion(totalPe, totalPl) {
-  return (totalPl <= 3 && (totalPe + totalPl) <= 4) ? 'CHICO' : 'GRANDE';
-}
-
-// ── Estado ───────────────────────────────────────────────
-// Un cliente puede tener N cotizaciones sumadas
-// clients = [{ nombre, km, monto, kgTotal, lataTotal, cotizaciones }]
 let clients = [];
 
-// ── Formulario ───────────────────────────────────────────
-function updateHint() {
+function updateHint(){
   const kg   = parseFloat(document.getElementById('f-kg').value)   || 0;
   const lata = parseFloat(document.getElementById('f-lata').value) || 0;
-  const pe   = kg   > 0 ? Math.ceil(kg   / KG_P) : 0;
-  const pl   = lata > 0 ? Math.ceil(lata / UN_P) : 0;
+  const pe = kg   > 0 ? Math.ceil(kg   / KG_P) : 0;
+  const pl = lata > 0 ? Math.ceil(lata / UN_P) : 0;
   const parts = [];
   if (pe > 0) parts.push(pe + ' pallet' + (pe > 1 ? 's' : '') + ' insumos');
   if (pl > 0) parts.push(pl + ' pallet' + (pl > 1 ? 's' : '') + ' lata');
   document.getElementById('pallet-hint').textContent = parts.length ? '→ ' + parts.join(' + ') : '';
 }
 
-function onClienteChange() {
-  const v = document.getElementById('f-cliente').value;
-  if (v) document.getElementById('f-monto').focus();
+function onClienteChange(){
+  if (document.getElementById('f-cliente').value)
+    document.getElementById('f-monto').focus();
 }
 
-function addCotizacion() {
+function addCotizacion(){
   const sel = document.getElementById('f-cliente').value;
-  if (!sel) { alert('Selecciona un cliente'); return; }
-
+  if (!sel){ alert('Selecciona un cliente'); return; }
   const [nombre, kmStr] = sel.split('|');
   const km    = parseInt(kmStr);
   const monto = parseFloat(document.getElementById('f-monto').value) || 0;
   const kg    = parseFloat(document.getElementById('f-kg').value)    || 0;
   const lata  = parseFloat(document.getElementById('f-lata').value)  || 0;
-
-  const idx = clients.findIndex(c => c.nombre === nombre);
-
-  if (idx >= 0) {
-    // ✅ SUMAR al cliente existente (múltiples cotizaciones)
-    clients[idx].monto    += monto;
-    clients[idx].kgTotal  += kg;
-    clients[idx].lataTotal+= lata;
+  const idx   = clients.findIndex(c => c.nombre === nombre);
+  if (idx >= 0){
+    // Sumar cotizaciones del mismo cliente
+    clients[idx].monto     += monto;
+    clients[idx].kgTotal   += kg;
+    clients[idx].lataTotal += lata;
     clients[idx].cotizaciones++;
   } else {
     clients.push({ nombre, km, monto, kgTotal: kg, lataTotal: lata, cotizaciones: 1 });
   }
-
-  // Limpiar formulario
-  document.getElementById('f-cliente').value = '';
-  document.getElementById('f-monto').value   = '';
-  document.getElementById('f-kg').value      = '';
-  document.getElementById('f-lata').value    = '';
+  ['f-cliente','f-monto','f-kg','f-lata'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('pallet-hint').textContent = '';
-
   render();
 }
 
-function removeClient(i) {
-  clients.splice(i, 1);
-  render();
-}
+function removeClient(i){ clients.splice(i, 1); render(); }
 
-// ── Render ───────────────────────────────────────────────
-function render() {
+function render(){
   const tbody = document.getElementById('client-tbody');
-
-  if (!clients.length) {
-    tbody.innerHTML = '<tr><td colspan="7"><div class="empty"><i class="ti ti-route"></i><p>Agrega los clientes de la ruta para calcular el flete</p></div></td></tr>';
+  if (!clients.length){
+    tbody.innerHTML = '<tr><td colspan="8"><div class="empty"><i class="ti ti-route"></i><p>Agrega los clientes de la ruta para calcular el flete</p></div></td></tr>';
     ['stat-km','stat-ft','stat-subv','stat-dist'].forEach(id => {
-      const e = document.getElementById(id);
-      e.textContent = '—'; e.classList.add('muted');
+      const e = document.getElementById(id); e.textContent = '—'; e.classList.add('muted');
     });
     document.getElementById('stat-camion').innerHTML = '<span style="color:var(--text3);font-size:13px">—</span>';
     return;
   }
 
-  // Calcular pallets por cliente
-  const withPallets = clients.map(c => ({
+  // Calcular pallets
+  const wp = clients.map(c => ({
     ...c,
     pe: c.kgTotal   > 0 ? Math.ceil(c.kgTotal   / KG_P) : 0,
     pl: c.lataTotal > 0 ? Math.ceil(c.lataTotal / UN_P) : 0,
   }));
 
-  const totalPe  = withPallets.reduce((s, c) => s + c.pe, 0);
-  const totalPl  = withPallets.reduce((s, c) => s + c.pl, 0);
+  const totalPe  = wp.reduce((s, c) => s + c.pe, 0);
+  const totalPl  = wp.reduce((s, c) => s + c.pl, 0);
   const totalPal = totalPe + totalPl;
+  const n        = clients.length;           // número de clientes en ruta
   const kmMax    = Math.max(...clients.map(c => c.km));
   const tipo     = tipoCamion(totalPe, totalPl);
   const tarifa   = tipo === 'CHICO' ? T_CH : T_GR;
   const ftTotal  = kmMax * tarifa;
-  const subvMonto= Math.round(ftTotal * SUBV);   // lo que absorbe Gecorp
-  const distMonto= Math.round(ftTotal * DIST);   // lo que pagan los clientes
+
+  // Distribución:
+  // Gecorp absorbe 30% → subvMonto
+  // Clientes pagan 70% → distMonto
+  //   mitad del 70% (35%) → base fija dividida entre N clientes
+  //   mitad del 70% (35%) → proporcional a pallets
+  const subvMonto  = ftTotal * SUBV;                      // 30%
+  const distMonto  = ftTotal * DIST;                      // 70%
+  const baseFondo  = distMonto * BASE_SHARE;              // 35% total
+  const varFondo   = distMonto * VAR_SHARE;               // 35% total
+  const basePorCli = n > 0 ? baseFondo / n : 0;          // igual para todos
 
   // Actualizar route bar
-  const setVal = (id, txt) => { const e = document.getElementById(id); e.textContent = txt; e.classList.remove('muted'); };
-  setVal('stat-km',   kmMax + ' km');
-  setVal('stat-ft',   fmt(ftTotal));
-  setVal('stat-subv', fmt(subvMonto));
-  setVal('stat-dist', fmt(distMonto));
+  const setV = (id, txt) => { const e = document.getElementById(id); e.textContent = txt; e.classList.remove('muted'); };
+  setV('stat-km',   kmMax + ' km');
+  setV('stat-ft',   fmt(ftTotal));
+  setV('stat-subv', fmt(Math.round(subvMonto)));
+  setV('stat-dist', fmt(Math.round(distMonto)));
   document.getElementById('stat-camion').innerHTML =
     `<span class="truck-badge ${tipo === 'CHICO' ? 'b-chico' : 'b-grande'}">
       <i class="ti ti-truck"></i> ${tipo === 'CHICO' ? 'Chico' : 'Grande'}
     </span>`;
 
-  // Filas de clientes
   tbody.innerHTML = '';
-  withPallets.forEach((c, i) => {
-    const pal   = c.pe + c.pl;
-    const frac  = totalPal > 0 ? pal / totalPal : 0;
-    // Flete a cobrar = fracción del 70% distribuible
-    const flete = Math.round(distMonto * frac);
-    // KPI = flete cobrado / monto neto
-    const kpiVal = c.monto > 0 ? flete / c.monto : null;
+  let totalFlete = 0;
+  wp.forEach((c, i) => {
+    const pal     = c.pe + c.pl;
+    const fracPal = totalPal > 0 ? pal / totalPal : 0;
+    const fleBase = Math.round(basePorCli);                     // base fija
+    const fleVar  = Math.round(varFondo * fracPal);             // variable por pallets
+    const fleTot  = fleBase + fleVar;                           // total a cobrar
+    totalFlete   += fleTot;
+
+    // KPI = Costo Gecorp asignado a este cliente / monto neto
+    // Costo Gecorp por cliente = subvención proporcional a su flete sobre el total cobrado
+    const costoGe = Math.round(subvMonto * (fleTot / distMonto));
+    const kpiVal  = c.monto > 0 ? costoGe / c.monto : null;
 
     let kpiHtml = '<span class="kpi-pill kpi-gray">—</span>';
-    if (kpiVal !== null) {
+    if (kpiVal !== null){
       if      (kpiVal <= 0.03) kpiHtml = `<span class="kpi-pill kpi-green">${fmtP(kpiVal)}</span>`;
       else if (kpiVal <= 0.06) kpiHtml = `<span class="kpi-pill kpi-amber">${fmtP(kpiVal)}</span>`;
       else                     kpiHtml = `<span class="kpi-pill kpi-red">${fmtP(kpiVal)}</span>`;
     }
 
     const isLup = c.nombre.toLowerCase().includes('lúpulos') || c.nombre.toLowerCase().includes('lupulos');
-    const cotizBadge = c.cotizaciones > 1
-      ? `<span class="cotiz-badge">${c.cotizaciones} cotiz.</span>` : '';
-
+    const cotizBadge = c.cotizaciones > 1 ? `<span class="cotiz-badge">${c.cotizaciones} cotiz.</span>` : '';
     const tr = document.createElement('tr');
     if (isLup) tr.className = 'lup-row';
     tr.innerHTML = `
-      <td>
-        <div class="client-name">
-          ${isLup ? '<i class="ti ti-star" style="font-size:12px;color:var(--amber)"></i>' : ''}
-          ${c.nombre}
-          <span class="km-badge">${c.km} km</span>
-          ${cotizBadge}
-        </div>
-      </td>
+      <td><div class="client-name">
+        ${isLup ? '<i class="ti ti-star" style="font-size:12px;color:var(--amber)"></i>' : ''}
+        ${c.nombre}
+        <span class="km-badge">${c.km} km</span>
+        ${cotizBadge}
+      </div></td>
       <td class="monto-val">${c.monto > 0 ? fmt(c.monto) : '<span style="color:var(--text3)">—</span>'}</td>
       <td>
         <div>${pal > 0 ? pal : '—'}</div>
         <div class="pal-sub">${c.pe > 0 ? c.pe + 'M ' : ''}${c.pl > 0 ? c.pl + 'L' : ''}</div>
       </td>
-      <td class="frac-val">${totalPal > 0 ? fmtP(frac) : '—'}</td>
-      <td class="flete-val">${pal > 0 ? fmt(flete) : '—'}</td>
+      <td class="frac-val">${fmt(fleBase)}</td>
+      <td class="frac-val">${pal > 0 ? fmt(fleVar) : '—'}</td>
+      <td>
+        <div class="flete-val">${fmt(fleTot)}</div>
+        <div class="flete-detail">base + variable</div>
+      </td>
       <td>${kpiHtml}</td>
-      <td><button class="btn-del" onclick="removeClient(${i})" title="Quitar cliente"><i class="ti ti-x"></i></button></td>`;
+      <td><button class="btn-del" onclick="removeClient(${i})" title="Quitar"><i class="ti ti-x"></i></button></td>`;
     tbody.appendChild(tr);
   });
 
-  // Fila de totales
+  // Fila totales
   const totalMonto = clients.reduce((s, c) => s + (c.monto || 0), 0);
   const tr = document.createElement('tr');
   tr.className = 'total-row';
@@ -363,22 +347,22 @@ function render() {
     <td>Total ruta</td>
     <td>${totalMonto > 0 ? fmt(totalMonto) : '—'}</td>
     <td>${totalPal}</td>
-    <td>100%</td>
-    <td style="font-family:'DM Mono',monospace;font-weight:600;color:var(--text)">${fmt(distMonto)} <span style="font-weight:400;color:var(--text3);font-size:10px">(70%)</span></td>
+    <td>${fmt(Math.round(baseFondo))}</td>
+    <td>${fmt(Math.round(varFondo))}</td>
+    <td style="font-family:'DM Mono',monospace;font-weight:600;color:var(--text)">${fmt(Math.round(distMonto))}</td>
     <td></td><td></td>`;
   tbody.appendChild(tr);
 }
 
-// ── Utilidades ───────────────────────────────────────────
-function resetAll() {
+function resetAll(){
   if (clients.length && !confirm('¿Reiniciar la ruta?')) return;
   clients = [];
   render();
 }
 
-['f-monto','f-kg','f-lata'].forEach(id => {
-  document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') addCotizacion(); });
-});
+['f-monto','f-kg','f-lata'].forEach(id =>
+  document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') addCotizacion(); })
+);
 
 document.getElementById('header-date').textContent =
   new Date().toLocaleDateString('es-CL', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
