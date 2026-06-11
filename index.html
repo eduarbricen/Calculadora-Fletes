@@ -57,6 +57,7 @@ tbody tr.total-row td{color:var(--text2);font-family:'DM Mono',monospace;font-si
 .client-name{font-weight:500;display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
 .km-badge{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;background:var(--bg3);padding:2px 7px;border-radius:20px;border:1px solid var(--border)}
 .cotiz-badge{font-size:10px;color:var(--blue);font-family:'DM Mono',monospace;background:var(--blue-bg);padding:2px 7px;border-radius:20px;border:1px solid var(--blue-border)}
+.truck2-badge{font-size:10px;color:var(--amber);font-family:'DM Mono',monospace;background:var(--amber-bg);padding:2px 7px;border-radius:20px;border:1px solid var(--amber-border)}
 .pal-sub{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px}
 .flete-val{font-family:'DM Mono',monospace;font-weight:600;font-size:13px;color:var(--green)}
 .flete-detail{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px}
@@ -142,6 +143,8 @@ tbody tr.total-row td{color:var(--text2);font-family:'DM Mono',monospace;font-si
     <span>El <strong>75%</strong> restante se divide: <strong>50%</strong> base fija por cliente + <strong>50%</strong> proporcional a pallets</span>
     <div class="sb-div"></div>
     <span>Pallet insumos: <strong>1.300 kg</strong> · Pallet lata: <strong>3.890 un.</strong></span>
+    <div class="sb-div"></div>
+    <span>Chico: máx <strong>4 pallets</strong> · Grande: máx <strong>6 pallets</strong></span>
   </div>
 
   <div class="route-bar">
@@ -149,7 +152,7 @@ tbody tr.total-row td{color:var(--text2);font-family:'DM Mono',monospace;font-si
     <div class="route-stat"><div class="lbl">Flete total</div><div class="val muted" id="stat-ft">—</div></div>
     <div class="route-stat"><div class="lbl">Gecorp (25%)</div><div class="val muted" id="stat-subv">—</div></div>
     <div class="route-stat"><div class="lbl">A clientes (75%)</div><div class="val muted" id="stat-dist">—</div></div>
-    <div class="route-stat"><div class="lbl">Camión</div><div class="val muted" id="stat-camion">—</div></div>
+    <div class="route-stat"><div class="lbl">Camión(es)</div><div class="val muted" id="stat-camion">—</div></div>
   </div>
 
   <div class="table-wrap">
@@ -176,7 +179,7 @@ tbody tr.total-row td{color:var(--text2);font-family:'DM Mono',monospace;font-si
   </div>
 
   <div class="footer">
-    <span class="footer-note">Chico $1.450/km · Grande $1.650/km · Base fija 50% + Variable pallets 50% del 75% distribuible</span>
+    <span class="footer-note">Chico $1.450/km máx 4 pallets · Grande $1.650/km máx 6 pallets · Base 50% + Variable 50% del 75%</span>
     <button class="rbtn" onclick="resetAll()">
       <i class="ti ti-refresh" style="font-size:12px;vertical-align:-1px;margin-right:4px"></i>Reiniciar
     </button>
@@ -185,51 +188,98 @@ tbody tr.total-row td{color:var(--text2);font-family:'DM Mono',monospace;font-si
 </div>
 
 <script>
-const T_CH  = 1450;   // $/km camión chico
-const T_GR  = 1650;   // $/km camión grande
-const KG_P  = 1300;   // kg máx por pallet insumos
-const UN_P  = 3890;   // un. por pallet lata
-const SUBV  = 0.25;   // Gecorp absorbe 25%
-const DIST  = 0.75;   // 75% va a clientes
-const BASE_SHARE = 0.50; // del 70%: 50% base fija igual para todos
-const VAR_SHARE  = 0.50; // del 70%: 50% proporcional a pallets
+// ── Constantes ────────────────────────────────────────────
+const T_CH       = 1450;   // $/km camión chico
+const T_GR       = 1650;   // $/km camión grande
+const KG_P       = 1300;   // kg máx por pallet insumos
+const UN_P       = 3890;   // un. por pallet lata
+const SUBV       = 0.25;   // Gecorp absorbe 25%
+const DIST       = 0.75;   // 75% va a clientes
+const BASE_SHARE = 0.50;   // 50% del 75% → base fija igual para todos
+const VAR_SHARE  = 0.50;   // 50% del 75% → proporcional a pallets
+const CAP_CHICO  = 4;      // máx pallets camión chico
+const CAP_GRANDE = 6;      // máx pallets camión grande
 
 const fmt  = n => '$' + Math.round(n).toLocaleString('es-CL');
 const fmtP = n => (n * 100).toFixed(2).replace('.', ',') + '%';
-function tipoCamion(pe, pl){ return (pl <= 3 && (pe + pl) <= 4) ? 'CHICO' : 'GRANDE' }
+
+// Redondea al múltiplo de $5.000 más cercano
+function round5k(n) {
+  return Math.round(n / 5000) * 5000;
+}
+
+// Determina el tipo de camión según la tabla de combinaciones de Eladio:
+// Chico: latas <= 3 Y total <= 4
+// Grande: cualquier otra combinación hasta 6 pallets
+function tipoCamion(pe, pl) {
+  return (pl <= 3 && (pe + pl) <= CAP_CHICO) ? 'CHICO' : 'GRANDE';
+}
+
+// Dado un número de pallets, devuelve cuántos camiones se necesitan
+// y de qué tipo, optimizando el segundo camión según pallets restantes.
+// Retorna: [{ tipo, pallets }]
+function calcCamiones(pe, pl) {
+  const totalPal = pe + pl;
+  const tipoBase = tipoCamion(pe, pl);
+  const capBase  = tipoBase === 'CHICO' ? CAP_CHICO : CAP_GRANDE;
+
+  if (totalPal <= capBase) {
+    // Cabe en un solo camión
+    return [{ tipo: tipoBase, pallets: totalPal, tarifa: tipoBase === 'CHICO' ? T_CH : T_GR }];
+  }
+
+  // Necesita segundo camión: pallets restantes tras llenar el primero
+  const restantes = totalPal - capBase;
+  // Determinar tipo del segundo camión según pallets restantes
+  // Usamos latas restantes aproximadas proporcionalmente
+  const fracLatas = pl / totalPal;
+  const plRest    = Math.round(restantes * fracLatas);
+  const peRest    = restantes - plRest;
+  const tipoExtra = tipoCamion(peRest, plRest);
+
+  return [
+    { tipo: tipoBase,  pallets: capBase,    tarifa: tipoBase  === 'CHICO' ? T_CH : T_GR },
+    { tipo: tipoExtra, pallets: restantes,  tarifa: tipoExtra === 'CHICO' ? T_CH : T_GR },
+  ];
+}
 
 let clients = [];
 
-function updateHint(){
+function updateHint() {
   const kg   = parseFloat(document.getElementById('f-kg').value)   || 0;
   const lata = parseFloat(document.getElementById('f-lata').value) || 0;
-  const pe = kg   > 0 ? Math.ceil(kg   / KG_P) : 0;
-  const pl = lata > 0 ? Math.ceil(lata / UN_P) : 0;
+  const pe   = kg   > 0 ? Math.ceil(kg   / KG_P) : 0;
+  const pl   = lata > 0 ? Math.ceil(lata / UN_P) : 0;
+  const tot  = pe + pl;
   const parts = [];
   if (pe > 0) parts.push(pe + ' pallet' + (pe > 1 ? 's' : '') + ' insumos');
   if (pl > 0) parts.push(pl + ' pallet' + (pl > 1 ? 's' : '') + ' lata');
-  document.getElementById('pallet-hint').textContent = parts.length ? '→ ' + parts.join(' + ') : '';
+  // Advertencia si supera capacidad
+  let warn = '';
+  if (tot > CAP_GRANDE)       warn = ' ⚠ supera camión grande, se agregará 2° camión';
+  else if (tot > CAP_CHICO)   warn = ' → camión grande';
+  else                         warn = ' → camión chico';
+  document.getElementById('pallet-hint').textContent = parts.length ? '→ ' + parts.join(' + ') + warn : '';
 }
 
-function onClienteChange(){
+function onClienteChange() {
   if (document.getElementById('f-cliente').value)
     document.getElementById('f-monto').focus();
 }
 
-function addCotizacion(){
+function addCotizacion() {
   const sel = document.getElementById('f-cliente').value;
-  if (!sel){ alert('Selecciona un cliente'); return; }
+  if (!sel) { alert('Selecciona un cliente'); return; }
   const [nombre, kmStr] = sel.split('|');
   const km    = parseInt(kmStr);
   const monto = parseFloat(document.getElementById('f-monto').value) || 0;
   const kg    = parseFloat(document.getElementById('f-kg').value)    || 0;
   const lata  = parseFloat(document.getElementById('f-lata').value)  || 0;
   const idx   = clients.findIndex(c => c.nombre === nombre);
-  if (idx >= 0){
-    // Sumar cotizaciones del mismo cliente
-    clients[idx].monto     += monto;
-    clients[idx].kgTotal   += kg;
-    clients[idx].lataTotal += lata;
+  if (idx >= 0) {
+    clients[idx].monto      += monto;
+    clients[idx].kgTotal    += kg;
+    clients[idx].lataTotal  += lata;
     clients[idx].cotizaciones++;
   } else {
     clients.push({ nombre, km, monto, kgTotal: kg, lataTotal: lata, cotizaciones: 1 });
@@ -239,11 +289,11 @@ function addCotizacion(){
   render();
 }
 
-function removeClient(i){ clients.splice(i, 1); render(); }
+function removeClient(i) { clients.splice(i, 1); render(); }
 
-function render(){
+function render() {
   const tbody = document.getElementById('client-tbody');
-  if (!clients.length){
+  if (!clients.length) {
     tbody.innerHTML = '<tr><td colspan="8"><div class="empty"><i class="ti ti-route"></i><p>Agrega los clientes de la ruta para calcular el flete</p></div></td></tr>';
     ['stat-km','stat-ft','stat-subv','stat-dist'].forEach(id => {
       const e = document.getElementById(id); e.textContent = '—'; e.classList.add('muted');
@@ -252,7 +302,7 @@ function render(){
     return;
   }
 
-  // Calcular pallets
+  // Calcular pallets por cliente
   const wp = clients.map(c => ({
     ...c,
     pe: c.kgTotal   > 0 ? Math.ceil(c.kgTotal   / KG_P) : 0,
@@ -262,58 +312,87 @@ function render(){
   const totalPe  = wp.reduce((s, c) => s + c.pe, 0);
   const totalPl  = wp.reduce((s, c) => s + c.pl, 0);
   const totalPal = totalPe + totalPl;
-  const n        = clients.length;           // número de clientes en ruta
+  const n        = clients.length;
   const kmMax    = Math.max(...clients.map(c => c.km));
-  const tipo     = tipoCamion(totalPe, totalPl);
-  const tarifa   = tipo === 'CHICO' ? T_CH : T_GR;
-  const ftTotal  = kmMax * tarifa;
 
-  // Distribución:
-  // Gecorp absorbe 30% → subvMonto
-  // Clientes pagan 70% → distMonto
-  //   mitad del 70% (35%) → base fija dividida entre N clientes
-  //   mitad del 70% (35%) → proporcional a pallets
-  const subvMonto  = ftTotal * SUBV;                      // 30%
-  const distMonto  = ftTotal * DIST;                      // 70%
-  const baseFondo  = distMonto * BASE_SHARE;              // 35% total
-  const varFondo   = distMonto * VAR_SHARE;               // 35% total
-  const basePorCli = n > 0 ? baseFondo / n : 0;          // igual para todos
+  // Determinar camión(es) necesarios para la ruta completa
+  const camiones  = calcCamiones(totalPe, totalPl);
+  const necesita2 = camiones.length > 1;
 
-  // Actualizar route bar
+  // Flete total = suma de fletes de cada camión × km
+  const ftTotal = camiones.reduce((s, cam) => s + cam.tarifa * kmMax, 0);
+
+  // Distribución del 75% entre clientes (camión principal)
+  // El segundo camión lo paga solo el cliente que lo generó
+  const ftCam1    = camiones[0].tarifa * kmMax;
+  const subvCam1  = ftCam1 * SUBV;
+  const distCam1  = ftCam1 * DIST;
+  const baseFondo = distCam1 * BASE_SHARE;
+  const varFondo  = distCam1 * VAR_SHARE;
+  const basePorCli = n > 0 ? baseFondo / n : 0;
+
+  // Flete del 2° camión (si existe) lo paga el cliente con más pallets
+  let idxExceso = -1;
+  let ftCam2    = 0;
+  if (necesita2) {
+    ftCam2   = camiones[1].tarifa * kmMax;
+    // Identificar el cliente con más pallets (quien generó el exceso)
+    idxExceso = wp.reduce((maxIdx, c, i, arr) =>
+      (c.pe + c.pl) > (arr[maxIdx].pe + arr[maxIdx].pl) ? i : maxIdx, 0);
+  }
+
+  // Etiqueta camión(es) en route bar
+  const labelCamiones = camiones.map(cam =>
+    `<span class="truck-badge ${cam.tipo === 'CHICO' ? 'b-chico' : 'b-grande'}">
+      <i class="ti ti-truck"></i> ${cam.tipo === 'CHICO' ? 'Chico' : 'Grande'}
+    </span>`
+  ).join(' <span style="color:var(--text3);font-size:11px">+</span> ');
+
   const setV = (id, txt) => { const e = document.getElementById(id); e.textContent = txt; e.classList.remove('muted'); };
   setV('stat-km',   kmMax + ' km');
   setV('stat-ft',   fmt(ftTotal));
-  setV('stat-subv', fmt(Math.round(subvMonto)));
-  setV('stat-dist', fmt(Math.round(distMonto)));
-  document.getElementById('stat-camion').innerHTML =
-    `<span class="truck-badge ${tipo === 'CHICO' ? 'b-chico' : 'b-grande'}">
-      <i class="ti ti-truck"></i> ${tipo === 'CHICO' ? 'Chico' : 'Grande'}
-    </span>`;
+  setV('stat-subv', fmt(Math.round(ftTotal * SUBV)));
+  setV('stat-dist', fmt(Math.round(ftTotal - ftTotal * SUBV)));
+  document.getElementById('stat-camion').innerHTML = labelCamiones;
 
   tbody.innerHTML = '';
-  let totalFlete = 0;
   wp.forEach((c, i) => {
     const pal     = c.pe + c.pl;
     const fracPal = totalPal > 0 ? pal / totalPal : 0;
-    const fleBase = Math.round(basePorCli);                     // base fija
-    const fleVar  = Math.round(varFondo * fracPal);             // variable por pallets
-    const fleTot  = fleBase + fleVar;                           // total a cobrar
-    totalFlete   += fleTot;
 
-    // KPI = Costo Gecorp asignado a este cliente / monto neto
-    // Costo Gecorp por cliente = subvención proporcional a su flete sobre el total cobrado
-    const costoGe = Math.round(subvMonto * (fleTot / distMonto));
+    // Flete camión 1 (distribución normal)
+    const fleBase = round5k(basePorCli);
+    const fleVar  = round5k(varFondo * fracPal);
+    let   fleTot  = fleBase + fleVar;
+
+    // Flete camión 2 (solo para el cliente con exceso)
+    let extraCam2 = 0;
+    if (necesita2 && i === idxExceso) {
+      extraCam2 = round5k(ftCam2 * DIST); // el cliente paga el 75% del 2° camión
+      fleTot   += extraCam2;
+    }
+
+    // KPI: costo Gecorp asignado / monto neto
+    // Gecorp paga 25% del flete asignado al cliente
+    const costoGe = Math.round((fleTot / DIST) * SUBV);
     const kpiVal  = c.monto > 0 ? costoGe / c.monto : null;
 
     let kpiHtml = '<span class="kpi-pill kpi-gray">—</span>';
-    if (kpiVal !== null){
+    if (kpiVal !== null) {
       if      (kpiVal <= 0.03) kpiHtml = `<span class="kpi-pill kpi-green">${fmtP(kpiVal)}</span>`;
       else if (kpiVal <= 0.06) kpiHtml = `<span class="kpi-pill kpi-amber">${fmtP(kpiVal)}</span>`;
       else                     kpiHtml = `<span class="kpi-pill kpi-red">${fmtP(kpiVal)}</span>`;
     }
 
-    const isLup = c.nombre.toLowerCase().includes('lúpulos') || c.nombre.toLowerCase().includes('lupulos');
+    const isLup      = c.nombre.toLowerCase().includes('lúpulos') || c.nombre.toLowerCase().includes('lupulos');
     const cotizBadge = c.cotizaciones > 1 ? `<span class="cotiz-badge">${c.cotizaciones} cotiz.</span>` : '';
+    const cam2Badge  = (necesita2 && i === idxExceso)
+      ? `<span class="truck2-badge"><i class="ti ti-truck" style="font-size:10px"></i> +2° camión</span>` : '';
+
+    const fleDetalle = extraCam2 > 0
+      ? `base + variable + 2° camión`
+      : `base + variable`;
+
     const tr = document.createElement('tr');
     if (isLup) tr.className = 'lup-row';
     tr.innerHTML = `
@@ -322,6 +401,7 @@ function render(){
         ${c.nombre}
         <span class="km-badge">${c.km} km</span>
         ${cotizBadge}
+        ${cam2Badge}
       </div></td>
       <td class="monto-val">${c.monto > 0 ? fmt(c.monto) : '<span style="color:var(--text3)">—</span>'}</td>
       <td>
@@ -329,10 +409,10 @@ function render(){
         <div class="pal-sub">${c.pe > 0 ? c.pe + 'M ' : ''}${c.pl > 0 ? c.pl + 'L' : ''}</div>
       </td>
       <td class="frac-val">${fmt(fleBase)}</td>
-      <td class="frac-val">${pal > 0 ? fmt(fleVar) : '—'}</td>
+      <td class="frac-val">${pal > 0 ? fmt(fleVar) : '—'}${extraCam2 > 0 ? '<div class="pal-sub">+' + fmt(extraCam2) + ' (2° cam.)</div>' : ''}</td>
       <td>
         <div class="flete-val">${fmt(fleTot)}</div>
-        <div class="flete-detail">base + variable</div>
+        <div class="flete-detail">${fleDetalle}</div>
       </td>
       <td>${kpiHtml}</td>
       <td><button class="btn-del" onclick="removeClient(${i})" title="Quitar"><i class="ti ti-x"></i></button></td>`;
@@ -341,6 +421,7 @@ function render(){
 
   // Fila totales
   const totalMonto = clients.reduce((s, c) => s + (c.monto || 0), 0);
+  const totalFlete = ftTotal * DIST;
   const tr = document.createElement('tr');
   tr.className = 'total-row';
   tr.innerHTML = `
@@ -348,13 +429,13 @@ function render(){
     <td>${totalMonto > 0 ? fmt(totalMonto) : '—'}</td>
     <td>${totalPal}</td>
     <td>${fmt(Math.round(baseFondo))}</td>
-    <td>${fmt(Math.round(varFondo))}</td>
-    <td style="font-family:'DM Mono',monospace;font-weight:600;color:var(--text)">${fmt(Math.round(distMonto))}</td>
+    <td>${fmt(Math.round(varFondo + (necesita2 ? ftCam2 * DIST : 0)))}</td>
+    <td style="font-family:'DM Mono',monospace;font-weight:600;color:var(--text)">${fmt(Math.round(totalFlete))}</td>
     <td></td><td></td>`;
   tbody.appendChild(tr);
 }
 
-function resetAll(){
+function resetAll() {
   if (clients.length && !confirm('¿Reiniciar la ruta?')) return;
   clients = [];
   render();
