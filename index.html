@@ -385,7 +385,7 @@ function render() {
           <i class="ti ti-truck" style="font-size:10px"></i> Camión ${camiones[0].tipo==='CHICO'?'chico':'grande'}
         </span></td>
         <td style="color:var(--text3)">${palCam1} pallet${palCam1!==1?'s':''} · ${fmt(fBase1)} base + ${fmt(fVar1)} var.</td>
-        <td style="color:var(--text);font-weight:600">${fmt(fCam1)}</td>
+        <td style="color:var(--green);font-weight:700;font-size:14px">${fmt(fCam1)}</td>
       </tr>`;
 
     if (fCam2 > 0) {
@@ -395,7 +395,7 @@ function render() {
           <i class="ti ti-truck" style="font-size:10px"></i> 2° camión ${camiones[1].tipo==='CHICO'?'chico':'grande'}
         </span></td>
         <td style="color:var(--text3)">${palCam2} pallet${palCam2!==1?'s':''} · 75% del flete del 2° camión</td>
-        <td style="color:var(--amber);font-weight:600">${fmt(fCam2)}</td>
+        <td style="color:var(--amber);font-weight:700;font-size:14px">${fmt(fCam2)}</td>
       </tr>`;
     }
 
