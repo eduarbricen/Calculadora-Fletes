@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora de Flete Eladio — Gecorp</title>
+<title>Calculadora de Flete — Gecorp</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
@@ -16,6 +16,7 @@
   --amber:#F5A623;--amber-bg:rgba(245,166,35,.1);--amber-border:rgba(245,166,35,.3);
   --red:#E55353;--red-bg:rgba(229,83,83,.1);--red-border:rgba(229,83,83,.3);
   --blue:#5B9CF6;--blue-bg:rgba(91,156,246,.1);--blue-border:rgba(91,156,246,.3);
+  --purple:#A78BFA;--purple-bg:rgba(167,139,250,.1);--purple-border:rgba(167,139,250,.3);
   --accent:#5B9CF6;--radius:8px;--radius-lg:12px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -25,7 +26,9 @@ body{background:var(--bg);color:var(--text);font-family:'Sora',sans-serif;font-s
 .header-title{font-size:14px;font-weight:600}
 .header-sub{font-size:11px;color:var(--text2);margin-top:1px}
 .header-right{margin-left:auto;font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)}
-.main{max-width:1020px;margin:0 auto;padding:2rem 1.5rem}
+.main{max-width:1040px;margin:0 auto;padding:2rem 1.5rem}
+
+/* Form */
 .add-form{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem 1.25rem;margin-bottom:1rem}
 .form-title{font-size:10px;font-weight:600;color:var(--text3);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.75rem}
 .add-form-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr auto;gap:10px;align-items:end}
@@ -35,50 +38,61 @@ body{background:var(--bg);color:var(--text);font-family:'Sora',sans-serif;font-s
 .field select option{background:var(--bg3)}
 .btn-primary{font-size:13px;font-family:'Sora',sans-serif;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);padding:7px 18px;cursor:pointer;white-space:nowrap;transition:opacity .2s;height:34px}
 .btn-primary:hover{opacity:.85}
-.pallet-hint{font-size:11px;color:var(--text3);margin-top:.5rem;font-family:'DM Mono',monospace;min-height:16px}
-.subsidy-bar{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:.7rem 1.1rem;margin-bottom:1rem;font-size:12px;color:var(--text2)}
-.subsidy-bar strong{color:var(--text);font-family:'DM Mono',monospace}
+.pallet-hint{font-size:11px;margin-top:.5rem;font-family:'DM Mono',monospace;min-height:16px}
+.hint-ok{color:var(--green)}
+.hint-warn{color:var(--amber)}
+
+/* Info bar */
+.info-bar{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:.7rem 1.1rem;margin-bottom:1rem;font-size:12px;color:var(--text2)}
+.info-bar strong{color:var(--text);font-family:'DM Mono',monospace}
 .sb-div{width:1px;height:14px;background:var(--border2);flex-shrink:0}
+
+/* Route bar */
 .route-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1rem}
 .route-stat{background:var(--bg2);padding:.85rem 1rem}
 .route-stat .lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;font-family:'DM Mono',monospace;margin-bottom:.3rem}
 .route-stat .val{font-size:16px;font-weight:600;color:var(--text);font-family:'DM Mono',monospace}
 .route-stat .val.muted{color:var(--text3);font-size:13px}
-/* Tabla principal */
+
+/* Table */
 .table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1rem}
 table{width:100%;border-collapse:collapse}
 thead th{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;font-family:'DM Mono',monospace;padding:.7rem 1rem;border-bottom:1px solid var(--border);text-align:left;background:var(--bg3)}
 thead th:not(:first-child){text-align:right}
-tbody td{padding:.8rem 1rem;border-bottom:1px solid var(--border);vertical-align:middle}
+tbody td{padding:.85rem 1rem;border-bottom:1px solid var(--border);vertical-align:middle}
 tbody td:not(:first-child){text-align:right}
 tbody tr:last-child td{border-bottom:none}
 tbody tr.lup-row{background:rgba(91,156,246,.04)}
 tbody tr:hover:not(.total-row){background:rgba(255,255,255,.015)}
 tbody tr.total-row td{color:var(--text2);font-family:'DM Mono',monospace;font-size:12px;border-top:1px solid var(--border2);background:var(--bg3)}
-/* Subtabla de camiones por cliente */
-.cam-table{width:100%;border-collapse:collapse;margin-top:.5rem}
-.cam-table td{padding:3px 0;font-size:11px;font-family:'DM Mono',monospace;color:var(--text2);text-align:right}
-.cam-table td:first-child{text-align:left}
-.cam-table tr.cam-total td{border-top:0.5px solid var(--border2);padding-top:5px;color:var(--text);font-weight:600}
-.cam-label{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:500;padding:1px 7px;border-radius:20px}
-.cam-chico{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
-.cam-grande{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border)}
-/* Badges */
+
+/* Client name badges */
 .client-name{font-weight:500;display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
 .km-badge{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;background:var(--bg3);padding:2px 7px;border-radius:20px;border:1px solid var(--border)}
 .cotiz-badge{font-size:10px;color:var(--blue);font-family:'DM Mono',monospace;background:var(--blue-bg);padding:2px 7px;border-radius:20px;border:1px solid var(--blue-border)}
 .pal-sub{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px}
-.flete-total-val{font-family:'DM Mono',monospace;font-weight:600;font-size:14px;color:var(--green)}
-.frac-val{font-family:'DM Mono',monospace;font-size:12px;color:var(--text2)}
 .monto-val{font-family:'DM Mono',monospace;font-size:13px}
+
+/* Transport badges */
+.trans-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;font-family:'DM Mono',monospace}
+.tb-macaf-p{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border)}
+.tb-macaf{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+.tb-eladio-c{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.tb-eladio-g{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border)}
+.tb-aros{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+
+/* Freight subtable */
+.cam-table{width:100%;border-collapse:collapse}
+.cam-table td{padding:3px 0;font-size:11px;font-family:'DM Mono',monospace;color:var(--text2);text-align:right}
+.cam-table td:first-child{text-align:left}
+
+/* KPI */
 .kpi-pill{display:inline-block;font-size:10px;font-family:'DM Mono',monospace;font-weight:600;padding:3px 8px;border-radius:20px;letter-spacing:.03em}
 .kpi-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
 .kpi-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
 .kpi-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
 .kpi-gray{background:var(--bg3);color:var(--text3);border:1px solid var(--border)}
-.truck-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-family:'DM Mono',monospace;font-weight:500;padding:3px 10px;border-radius:20px}
-.b-chico{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
-.b-grande{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border)}
+
 .btn-del{background:none;border:none;cursor:pointer;color:var(--text3);font-size:14px;padding:2px 6px;border-radius:4px;transition:color .15s}
 .btn-del:hover{color:var(--red)}
 .empty{text-align:center;padding:3rem 2rem;color:var(--text3)}
@@ -87,6 +101,7 @@ tbody tr.total-row td{color:var(--text2);font-family:'DM Mono',monospace;font-si
 .footer-note{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace}
 .rbtn{font-size:12px;color:var(--text3);background:none;border:1px solid var(--border);border-radius:var(--radius);padding:5px 12px;cursor:pointer;font-family:'Sora',sans-serif;transition:all .2s}
 .rbtn:hover{border-color:var(--border2);color:var(--text2)}
+
 @media(max-width:680px){
   .main{padding:1rem}
   .route-bar{grid-template-columns:1fr 1fr}
@@ -100,8 +115,8 @@ tbody tr.total-row td{color:var(--text2);font-family:'DM Mono',monospace;font-si
 <div class="header">
   <div class="logo">GC</div>
   <div>
-    <div class="header-title">Calculadora de Flete Eladio</div>
-    <div class="header-sub">Distribución de costo por ruta · Comercial Lúpulos</div>
+    <div class="header-title">Calculadora de Flete</div>
+    <div class="header-sub">Gecorp · Transportistas: MACAF · Eladio · Alejandra Aros</div>
   </div>
   <div class="header-right" id="header-date"></div>
 </div>
@@ -144,23 +159,23 @@ tbody tr.total-row td{color:var(--text2);font-family:'DM Mono',monospace;font-si
     <p class="pallet-hint" id="pallet-hint"></p>
   </div>
 
-  <div class="subsidy-bar">
+  <div class="info-bar">
     <i class="ti ti-info-circle" style="font-size:15px;color:var(--text3)"></i>
     <span>Gecorp absorbe <strong>25%</strong> del flete</span>
     <div class="sb-div"></div>
-    <span>El <strong>75%</strong> restante: <strong>50%</strong> base fija + <strong>50%</strong> proporcional a pallets</span>
+    <span>75% a clientes: <strong>50%</strong> base fija + <strong>50%</strong> por pallets</span>
     <div class="sb-div"></div>
-    <span>Pallet insumos: <strong>1.300 kg</strong> · Pallet lata: <strong>3.890 un.</strong></span>
+    <span>Pallet insumos: <strong>1.300 kg</strong> · Lata: <strong>3.890 un.</strong></span>
     <div class="sb-div"></div>
-    <span>Chico: máx <strong>4 pallets</strong> · Grande: máx <strong>6 pallets</strong></span>
+    <span><span class="trans-badge tb-macaf-p">MACAF Partner</span> &lt;1 pal · <span class="trans-badge tb-macaf">MACAF</span> 1-2 pal · <span class="trans-badge tb-eladio-c">Eladio Chico</span> 3-4 pal · <span class="trans-badge tb-eladio-g">Eladio Grande</span> 5-6 pal · <span class="trans-badge tb-aros">A. Aros</span> 7-8 pal</span>
   </div>
 
   <div class="route-bar">
-    <div class="route-stat"><div class="lbl">Km totales</div><div class="val muted" id="stat-km">—</div></div>
+    <div class="route-stat"><div class="lbl">Transportista</div><div class="val muted" id="stat-trans">—</div></div>
     <div class="route-stat"><div class="lbl">Flete total</div><div class="val muted" id="stat-ft">—</div></div>
     <div class="route-stat"><div class="lbl">Gecorp (25%)</div><div class="val muted" id="stat-subv">—</div></div>
     <div class="route-stat"><div class="lbl">A clientes (75%)</div><div class="val muted" id="stat-dist">—</div></div>
-    <div class="route-stat"><div class="lbl">Camión(es)</div><div class="val muted" id="stat-camion">—</div></div>
+    <div class="route-stat"><div class="lbl">Pallets totales</div><div class="val muted" id="stat-pal">—</div></div>
   </div>
 
   <div class="table-wrap">
@@ -185,7 +200,7 @@ tbody tr.total-row td{color:var(--text2);font-family:'DM Mono',monospace;font-si
   </div>
 
   <div class="footer">
-    <span class="footer-note">Chico $1.450/km máx 4 pallets · Grande $1.650/km máx 6 pallets · Valores redondeados a $5.000</span>
+    <span class="footer-note">Valores redondeados al múltiplo de $5.000 más cercano · Gecorp subvenciona 25%</span>
     <button class="rbtn" onclick="resetAll()">
       <i class="ti ti-refresh" style="font-size:12px;vertical-align:-1px;margin-right:4px"></i>Reiniciar
     </button>
@@ -194,49 +209,95 @@ tbody tr.total-row td{color:var(--text2);font-family:'DM Mono',monospace;font-si
 </div>
 
 <script>
-// ── Constantes ────────────────────────────────────────────
-const T_CH       = 1450;
-const T_GR       = 1650;
+// ── Constantes generales ──────────────────────────────────
 const KG_P       = 1300;
 const UN_P       = 3890;
 const SUBV       = 0.25;
 const DIST       = 0.75;
 const BASE_SHARE = 0.50;
 const VAR_SHARE  = 0.50;
-const CAP_CHICO  = 4;
-const CAP_GRANDE = 6;
 
-const fmt  = n => '$' + Math.round(n).toLocaleString('es-CL');
-const fmtP = n => (n * 100).toFixed(2).replace('.', ',') + '%';
-const round5k = n => Math.round(n / 5000) * 5000;
+// ── Tarifarios por destino ────────────────────────────────
+// MACAF: { km → { partner, camion } }
+// Los km coinciden con los de la ruta de cada cliente
+const MACAF = {
+  // destino           partner    camion
+  'Comercial Lúpulos': { partner: 148480, camion: 198500 }, // Puerto Varas 197km
+  'Rescate Brebajes':  { partner: 148480, camion: 198500 }, // Puerto Varas
+  'Derek Way':         { partner: 148480, camion: 198500 }, // Puerto Varas
+  'Bordelago':         { partner: 148480, camion: 198500 }, // Puerto Varas (Ensenada ≈ mismo destino)
+  'Rudy Plagemann':    { partner: 148480, camion: 198500 }, // Puerto Varas
+  'Totoral':           { partner: 145000, camion: 190820 }, // Llanquihue 188km
+  'Greed':             { partner:  91872, camion: 120450 }, // Osorno 110km
+  'Juan F. Cartes':    { partner:  91872, camion: 120450 }, // Osorno 110km
+};
 
-function tipoCamion(pe, pl) {
-  return (pl <= 3 && (pe + pl) <= CAP_CHICO) ? 'CHICO' : 'GRANDE';
-}
+// Alejandra Aros: tarifa fija por destino
+const AROS = {
+  'Comercial Lúpulos': 380000,
+  'Rescate Brebajes':  380000,
+  'Derek Way':         380000,
+  'Bordelago':         380000,
+  'Rudy Plagemann':    380000,
+  'Totoral':           340000,
+  'Greed':             200000,
+  'Juan F. Cartes':    200000,
+};
 
-// Determina cuántos camiones necesita la ruta y de qué tipo.
-// Retorna array de { tipo, tarifa, pallets }
-function calcCamiones(totalPe, totalPl) {
-  const totalPal = totalPe + totalPl;
-  const tipo1    = tipoCamion(totalPe, totalPl);
-  const cap1     = tipo1 === 'CHICO' ? CAP_CHICO : CAP_GRANDE;
+// Eladio: tarifa por km
+const ELADIO = { chico: 1450, grande: 1650 };
 
-  if (totalPal <= cap1) {
-    return [{ tipo: tipo1, tarifa: tipo1 === 'CHICO' ? T_CH : T_GR, pallets: totalPal }];
+// ── Clientes ─────────────────────────────────────────────
+const CLIENTES = {
+  'Comercial Lúpulos': 209,
+  'Rescate Brebajes':  237,
+  'Derek Way':         209,
+  'Bordelago':         221,
+  'Rudy Plagemann':    267,
+  'Totoral':           186,
+  'Greed':             112,
+  'Juan F. Cartes':    112,
+};
+
+// ── Helpers ───────────────────────────────────────────────
+const fmt   = n => '$' + Math.round(n).toLocaleString('es-CL');
+const fmtP  = n => (n * 100).toFixed(2).replace('.', ',') + '%';
+const r5k   = n => Math.round(n / 5000) * 5000;
+
+// Determina transportista y flete total según pallets totales de la ruta
+// Para MACAF y Aros se usa el destino del cliente con más km (parada más lejana)
+function getTransporte(totalPal, clienteRepresentativo) {
+  if (totalPal < 1) {
+    const tarifa = (MACAF[clienteRepresentativo] || {}).partner || 0;
+    return { nombre: 'MACAF Partner', badge: 'tb-macaf-p', ftTotal: tarifa, tipo: 'macaf-p' };
   }
-
-  // Segundo camión para pallets excedentes
-  const resto   = totalPal - cap1;
-  const fracL   = totalPal > 0 ? totalPl / totalPal : 0;
-  const plRest  = Math.round(resto * fracL);
-  const peRest  = resto - plRest;
-  const tipo2   = tipoCamion(peRest, plRest);
-  return [
-    { tipo: tipo1, tarifa: tipo1 === 'CHICO' ? T_CH : T_GR, pallets: cap1   },
-    { tipo: tipo2, tarifa: tipo2 === 'CHICO' ? T_CH : T_GR, pallets: resto  },
-  ];
+  if (totalPal <= 2) {
+    const tarifa = (MACAF[clienteRepresentativo] || {}).camion || 0;
+    return { nombre: 'MACAF Camión', badge: 'tb-macaf', ftTotal: tarifa, tipo: 'macaf' };
+  }
+  if (totalPal <= 4) {
+    return { nombre: 'Eladio Chico', badge: 'tb-eladio-c', ftTotal: 0, tipo: 'eladio-c' };
+  }
+  if (totalPal <= 6) {
+    return { nombre: 'Eladio Grande', badge: 'tb-eladio-g', ftTotal: 0, tipo: 'eladio-g' };
+  }
+  if (totalPal <= 8) {
+    const tarifa = AROS[clienteRepresentativo] || 380000;
+    return { nombre: 'Alejandra Aros', badge: 'tb-aros', ftTotal: tarifa, tipo: 'aros' };
+  }
+  // Más de 8 pallets: Eladio Grande + segundo camión
+  return { nombre: 'Eladio Grande +2°', badge: 'tb-eladio-g', ftTotal: 0, tipo: 'eladio-g-2' };
 }
 
+// Para Eladio calcula el flete según km del cliente más lejano
+function getFleteEladio(tipo, kmMax) {
+  if (tipo === 'eladio-c')   return ELADIO.chico  * kmMax;
+  if (tipo === 'eladio-g')   return ELADIO.grande * kmMax;
+  if (tipo === 'eladio-g-2') return ELADIO.grande * kmMax; // camión 1
+  return 0;
+}
+
+// ── Estado ────────────────────────────────────────────────
 let clients = [];
 
 function updateHint() {
@@ -248,11 +309,19 @@ function updateHint() {
   const parts = [];
   if (pe > 0) parts.push(pe + ' pallet' + (pe > 1 ? 's' : '') + ' insumos');
   if (pl > 0) parts.push(pl + ' pallet' + (pl > 1 ? 's' : '') + ' lata');
-  let warn = '';
-  if (tot > CAP_GRANDE)     warn = ' ⚠ necesitará 2° camión';
-  else if (tot > CAP_CHICO) warn = ' → camión grande';
-  else if (tot > 0)         warn = ' → camión chico';
-  document.getElementById('pallet-hint').textContent = parts.length ? '→ ' + parts.join(' + ') + warn : '';
+
+  let trans = '', cls = 'hint-ok';
+  if (tot === 0)      { trans = ''; }
+  else if (tot < 1)   { trans = '→ MACAF Partner'; }
+  else if (tot <= 2)  { trans = '→ MACAF Camión'; }
+  else if (tot <= 4)  { trans = '→ Eladio Chico'; }
+  else if (tot <= 6)  { trans = '→ Eladio Grande'; }
+  else if (tot <= 8)  { trans = '→ Alejandra Aros'; }
+  else                { trans = '⚠ supera 8 pallets — se necesitará 2° camión'; cls = 'hint-warn'; }
+
+  const el = document.getElementById('pallet-hint');
+  el.className = 'pallet-hint ' + cls;
+  el.textContent = parts.length ? parts.join(' + ') + '  ' + trans : '';
 }
 
 function onClienteChange() {
@@ -283,17 +352,18 @@ function addCotizacion() {
 
 function removeClient(i) { clients.splice(i, 1); render(); }
 
+// ── Render ────────────────────────────────────────────────
 function render() {
   const tbody = document.getElementById('client-tbody');
   if (!clients.length) {
     tbody.innerHTML = '<tr><td colspan="6"><div class="empty"><i class="ti ti-route"></i><p>Agrega los clientes de la ruta para calcular el flete</p></div></td></tr>';
-    ['stat-km','stat-ft','stat-subv','stat-dist'].forEach(id => {
+    ['stat-trans','stat-ft','stat-subv','stat-dist','stat-pal'].forEach(id => {
       const e = document.getElementById(id); e.textContent = '—'; e.classList.add('muted');
     });
-    document.getElementById('stat-camion').innerHTML = '<span style="color:var(--text3);font-size:13px">—</span>';
     return;
   }
 
+  // Calcular pallets por cliente
   const wp = clients.map(c => ({
     ...c,
     pe: c.kgTotal   > 0 ? Math.ceil(c.kgTotal   / KG_P) : 0,
@@ -304,57 +374,66 @@ function render() {
   const totalPl  = wp.reduce((s, c) => s + c.pl, 0);
   const totalPal = totalPe + totalPl;
   const n        = clients.length;
+  // Cliente más lejano (para tarifas por destino de MACAF y Aros)
   const kmMax    = Math.max(...clients.map(c => c.km));
-  const camiones = calcCamiones(totalPe, totalPl);
-  const necesita2 = camiones.length > 1;
+  const clienteMaxKm = clients.reduce((a, b) => b.km > a.km ? b : a).nombre;
 
-  // ── Flete camión 1 (ruta compartida) ──────────────────
-  const ft1      = camiones[0].tarifa * kmMax;
+  // Determinar transporte principal
+  const trans = getTransporte(totalPal, clienteMaxKm);
+
+  // Calcular flete total camión 1
+  let ft1 = trans.ftTotal;
+  if (trans.tipo.startsWith('eladio')) ft1 = getFleteEladio(trans.tipo, kmMax);
+
+  // Segundo camión si hay más de 8 pallets (Eladio Grande extra)
+  const necesita2 = totalPal > 8;
+  const palExceso = necesita2 ? totalPal - 6 : 0;
+  // Tipo del 2° camión según pallets excedentes
+  const tipo2 = (palExceso <= 4) ? 'eladio-c' : 'eladio-g';
+  const ft2   = necesita2 ? getFleteEladio(tipo2, kmMax) : 0;
+  const ftTotal = ft1 + ft2;
+
+  // El cliente con más pallets paga el 2° camión
+  const idxExceso = necesita2
+    ? wp.reduce((m, c, i, a) => (c.pe + c.pl) > (a[m].pe + a[m].pl) ? i : m, 0)
+    : -1;
+
+  // Distribución camión 1: 75% entre clientes (base fija + variable pallets)
   const dist1    = ft1 * DIST;
   const base1    = dist1 * BASE_SHARE;
   const var1     = dist1 * VAR_SHARE;
   const baseCli1 = n > 0 ? base1 / n : 0;
 
-  // ── Flete camión 2 (solo el cliente con más pallets) ──
-  let ft2 = 0, idxExceso = -1;
-  if (necesita2) {
-    ft2       = camiones[1].tarifa * kmMax;
-    idxExceso = wp.reduce((m, c, i, a) => (c.pe + c.pl) > (a[m].pe + a[m].pl) ? i : m, 0);
-  }
-
-  const ftTotal = camiones.reduce((s, cam) => s + cam.tarifa * kmMax, 0);
-
   // Route bar
-  const setV = (id, txt) => { const e = document.getElementById(id); e.textContent = txt; e.classList.remove('muted'); };
-  setV('stat-km',   kmMax + ' km');
-  setV('stat-ft',   fmt(ftTotal));
-  setV('stat-subv', fmt(Math.round(ftTotal * SUBV)));
-  setV('stat-dist', fmt(Math.round(ftTotal * DIST)));
-  document.getElementById('stat-camion').innerHTML = camiones.map(cam =>
-    `<span class="truck-badge ${cam.tipo==='CHICO'?'b-chico':'b-grande'}">
-      <i class="ti ti-truck"></i> ${cam.tipo==='CHICO'?'Chico':'Grande'}
-    </span>`
-  ).join(' <span style="color:var(--text3);font-size:10px;margin:0 2px">+</span>');
+  const setV = (id, txt, removeMuted = true) => {
+    const e = document.getElementById(id);
+    e.innerHTML = txt;
+    if (removeMuted) e.classList.remove('muted');
+  };
+  setV('stat-trans', `<span class="trans-badge ${trans.badge}">${trans.nombre}</span>`, false);
+  setV('stat-ft',    fmt(ftTotal));
+  setV('stat-subv',  fmt(Math.round(ftTotal * SUBV)));
+  setV('stat-dist',  fmt(Math.round(ftTotal * DIST)));
+  setV('stat-pal',   totalPal + (necesita2 ? ' ⚠' : ''));
 
+  // Filas de clientes
   tbody.innerHTML = '';
-
   wp.forEach((c, i) => {
     const pal     = c.pe + c.pl;
     const fracPal = totalPal > 0 ? pal / totalPal : 0;
 
-    // Flete camión 1 para este cliente
-    const fBase1 = round5k(baseCli1);
-    const fVar1  = round5k(var1 * fracPal);
-    const fCam1  = fBase1 + fVar1;
+    // Flete camión 1
+    const fBase = r5k(baseCli1);
+    const fVar  = r5k(var1 * fracPal);
+    const fCam1 = fBase + fVar;
 
-    // Flete camión 2 para este cliente (solo si es el que genera el exceso)
-    const fCam2  = (necesita2 && i === idxExceso) ? round5k(ft2 * DIST) : 0;
+    // Flete camión 2 (solo cliente con exceso)
+    const fCam2 = (necesita2 && i === idxExceso) ? r5k(ft2 * DIST) : 0;
 
-    const fleTot = fCam1 + fCam2;
-
-    // KPI: costo Gecorp / monto neto
+    const fleTot  = fCam1 + fCam2;
     const costoGe = Math.round((fleTot / DIST) * SUBV);
     const kpiVal  = c.monto > 0 ? costoGe / c.monto : null;
+
     let kpiHtml = '<span class="kpi-pill kpi-gray">—</span>';
     if (kpiVal !== null) {
       if      (kpiVal <= 0.03) kpiHtml = `<span class="kpi-pill kpi-green">${fmtP(kpiVal)}</span>`;
@@ -365,36 +444,37 @@ function render() {
     const isLup      = c.nombre.toLowerCase().includes('lúpulos') || c.nombre.toLowerCase().includes('lupulos');
     const cotizBadge = c.cotizaciones > 1 ? `<span class="cotiz-badge">${c.cotizaciones} cotiz.</span>` : '';
 
-    // Pallets de este cliente en cada camión:
-    // - Si no hay 2° camión, todos sus pallets van en el camión 1
-    // - Si hay 2° camión y este cliente es el que lo genera, sus pallets
-    //   se reparten: lo que cabía en el camión 1 (cupo restante) y el resto en el 2°
-    let palCam1 = pal;
-    let palCam2 = 0;
+    // Pallets de este cliente en cada camión
+    let palCam1 = pal, palCam2 = 0;
     if (necesita2 && i === idxExceso) {
       const palOtros = totalPal - pal;
-      const cupoCam1 = camiones[0].pallets;
-      palCam1 = Math.max(0, cupoCam1 - palOtros);
+      palCam1 = Math.max(0, 6 - palOtros); // cupo camión 1 = 6 (Eladio Grande)
       palCam2 = pal - palCam1;
     }
 
-    // Sub-tabla de fletes por camión — SIN sumar entre camiones
+    // Detalle del flete — línea camión 1
+    let detalle1 = '';
+    if (trans.tipo === 'macaf-p' || trans.tipo === 'macaf' || trans.tipo === 'aros') {
+      // Tarifa fija por destino: solo mostrar base + variable
+      detalle1 = `${fmt(fBase)} base + ${fmt(fVar)} var.`;
+    } else {
+      detalle1 = `${palCam1} pallet${palCam1!==1?'s':''} · ${fmt(fBase)} base + ${fmt(fVar)} var.`;
+    }
+
     let camRows = `
       <tr>
-        <td><span class="cam-label ${camiones[0].tipo==='CHICO'?'cam-chico':'cam-grande'}">
-          <i class="ti ti-truck" style="font-size:10px"></i> Camión ${camiones[0].tipo==='CHICO'?'chico':'grande'}
-        </span></td>
-        <td style="color:var(--text3)">${palCam1} pallet${palCam1!==1?'s':''} · ${fmt(fBase1)} base + ${fmt(fVar1)} var.</td>
+        <td><span class="trans-badge ${trans.badge}">${trans.nombre}</span></td>
+        <td style="color:var(--text3);font-size:10px">${detalle1}</td>
         <td style="color:var(--green);font-weight:700;font-size:14px">${fmt(fCam1)}</td>
       </tr>`;
 
     if (fCam2 > 0) {
+      const badge2 = tipo2 === 'eladio-c' ? 'tb-eladio-c' : 'tb-eladio-g';
+      const nom2   = tipo2 === 'eladio-c' ? 'Eladio Chico' : 'Eladio Grande';
       camRows += `
       <tr>
-        <td><span class="cam-label ${camiones[1].tipo==='CHICO'?'cam-chico':'cam-grande'}">
-          <i class="ti ti-truck" style="font-size:10px"></i> 2° camión ${camiones[1].tipo==='CHICO'?'chico':'grande'}
-        </span></td>
-        <td style="color:var(--text3)">${palCam2} pallet${palCam2!==1?'s':''} · 75% del flete del 2° camión</td>
+        <td><span class="trans-badge ${badge2}">2° ${nom2}</span></td>
+        <td style="color:var(--text3);font-size:10px">${palCam2} pallet${palCam2!==1?'s':''} · 75% del flete</td>
         <td style="color:var(--amber);font-weight:700;font-size:14px">${fmt(fCam2)}</td>
       </tr>`;
     }
@@ -415,24 +495,21 @@ function render() {
         <div>${pal > 0 ? pal : '—'}</div>
         <div class="pal-sub">${c.pe > 0 ? c.pe+'M ' : ''}${c.pl > 0 ? c.pl+'L' : ''}</div>
       </td>
-      <td>
-        <table class="cam-table">${camRows}</table>
-      </td>
+      <td><table class="cam-table">${camRows}</table></td>
       <td>${kpiHtml}</td>
       <td><button class="btn-del" onclick="removeClient(${i})" title="Quitar"><i class="ti ti-x"></i></button></td>`;
     tbody.appendChild(tr);
   });
 
-  // Fila totales
+  // Totales
   const totalMonto = clients.reduce((s, c) => s + (c.monto || 0), 0);
-  const totalFleteDist = ftTotal * DIST;
   const tr = document.createElement('tr');
   tr.className = 'total-row';
   tr.innerHTML = `
     <td>Total ruta</td>
     <td>${totalMonto > 0 ? fmt(totalMonto) : '—'}</td>
     <td>${totalPal}</td>
-    <td style="font-family:'DM Mono',monospace;font-weight:600;color:var(--text)">${fmt(Math.round(totalFleteDist))}</td>
+    <td style="font-family:'DM Mono',monospace;font-weight:600;color:var(--text)">${fmt(Math.round(ftTotal * DIST))}</td>
     <td></td><td></td>`;
   tbody.appendChild(tr);
 }
