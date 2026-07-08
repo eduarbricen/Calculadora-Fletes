@@ -250,6 +250,19 @@ const AROS = {
 // Eladio: tarifa por km
 const ELADIO = { chico: 1450, grande: 1650 };
 
+// ── Flete mínimo por cliente ──────────────────────────────
+const FLETE_MIN = {
+  'Comercial Lúpulos': 220000,
+  'Rescate Brebajes':  130000,
+  'Derek Way':         130000,
+  'Bordelago':         130000,
+  'Rudy Plagemann':    130000,
+  'Totoral':           130000,
+  'Greed':             130000,
+  'Juan F. Cartes':    130000,
+  'Diego Martinez':    130000,
+};
+
 // ── Clientes ─────────────────────────────────────────────
 const CLIENTES = {
   'Comercial Lúpulos': 209,
@@ -426,10 +439,13 @@ function render() {
     const pal     = c.pe + c.pl;
     const fracPal = totalPal > 0 ? pal / totalPal : 0;
 
-    // Flete camión 1
-    const fBase = r5k(baseCli1);
-    const fVar  = r5k(var1 * fracPal);
-    const fCam1 = fBase + fVar;
+    // Flete camión 1 — aplicar mínimo por cliente
+    const fBase    = r5k(baseCli1);
+    const fVar     = r5k(var1 * fracPal);
+    const fCalc1   = fBase + fVar;
+    const fMin     = FLETE_MIN[c.nombre] || 130000;
+    const fCam1    = Math.max(fCalc1, fMin);
+    const aplicoMin = fCam1 > fCalc1;
 
     // Flete camión 2 (solo cliente con exceso)
     const fCam2 = (necesita2 && i === idxExceso) ? r5k(ft2 * DIST) : 0;
@@ -465,10 +481,14 @@ function render() {
       detalle1 = `${palCam1} pallet${palCam1!==1?'s':''} · ${fmt(fBase)} base + ${fmt(fVar)} var.`;
     }
 
+    const minLabel = aplicoMin
+      ? `<span style="font-size:10px;color:var(--amber);font-family:'DM Mono',monospace;margin-left:4px">(mín ${fmt(fMin)})</span>`
+      : '';
+
     let camRows = `
       <tr>
         <td><span class="trans-badge ${trans.badge}">${trans.nombre}</span></td>
-        <td style="color:var(--text3);font-size:10px">${detalle1}</td>
+        <td style="color:var(--text3);font-size:10px">${detalle1}${minLabel}</td>
         <td style="color:var(--green);font-weight:700;font-size:14px">${fmt(fCam1)}</td>
       </tr>`;
 
