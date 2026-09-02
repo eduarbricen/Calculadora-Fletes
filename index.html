@@ -139,6 +139,7 @@ tbody tr.total-row td{color:var(--text2);font-family:'DM Mono',monospace;font-si
           <option value="Greed|112">Greed — 112 km</option>
           <option value="Juan F. Cartes|112">Juan F. Cartes — 112 km</option>
           <option value="Diego Martinez|218">Diego Martinez — 218 km</option>
+          <option value="Huilo Huilo|177">Huilo Huilo — 177 km</option>
         </select>
       </div>
       <div class="field">
@@ -168,7 +169,7 @@ tbody tr.total-row td{color:var(--text2);font-family:'DM Mono',monospace;font-si
     <div class="sb-div"></div>
     <span>Pallet insumos: <strong>1.300 kg</strong> · Lata: <strong>3.890 un.</strong></span>
     <div class="sb-div"></div>
-    <span><span class="trans-badge tb-macaf-p">MACAF Partner</span> &lt;1 pal · <span class="trans-badge tb-macaf">MACAF</span> 1-2 pal · <span class="trans-badge tb-eladio-c">Eladio Chico</span> 3-4 pal · <span class="trans-badge tb-eladio-g">Eladio Grande</span> 5-6 pal · <span class="trans-badge tb-aros">A. Aros</span> 7-8 pal</span>
+    <span><span class="trans-badge tb-macaf-p">MACAF Partner</span> &lt;1 pal · <span class="trans-badge tb-eladio-c">Eladio Chico</span> 1-4 pal · <span class="trans-badge tb-eladio-g">Eladio Grande</span> 5-6 pal · <span class="trans-badge tb-aros">A. Aros</span> 7-8 pal</span>
   </div>
 
   <div class="route-bar">
@@ -232,6 +233,7 @@ const MACAF = {
   'Greed':             { partner:  91872, camion: 120450 }, // Osorno 110km
   'Juan F. Cartes':    { partner:  91872, camion: 120450 }, // Osorno 110km
   'Diego Martinez':    { partner: 160602, camion: 214750 }, // Puerto Montt 213km
+  'Huilo Huilo':       { partner: 0,      camion: 198000 }, // Huilo Huilo 180km (MACAF PDF)
 };
 
 // Alejandra Aros: tarifa fija por destino
@@ -245,6 +247,7 @@ const AROS = {
   'Greed':             200000,
   'Juan F. Cartes':    200000,
   'Diego Martinez':    420000, // Puerto Montt
+  'Huilo Huilo':       310000, // Huilo Huilo
 };
 
 // Eladio: tarifa por km
@@ -261,6 +264,7 @@ const CLIENTES = {
   'Greed':             112,
   'Juan F. Cartes':    112,
   'Diego Martinez':    218,
+  'Huilo Huilo':       177,
 };
 
 // ── Helpers ───────────────────────────────────────────────
@@ -274,10 +278,6 @@ function getTransporte(totalPal, clienteRepresentativo) {
   if (totalPal < 1) {
     const tarifa = (MACAF[clienteRepresentativo] || {}).partner || 0;
     return { nombre: 'MACAF Partner', badge: 'tb-macaf-p', ftTotal: tarifa, tipo: 'macaf-p' };
-  }
-  if (totalPal <= 2) {
-    const tarifa = (MACAF[clienteRepresentativo] || {}).camion || 0;
-    return { nombre: 'MACAF Camión', badge: 'tb-macaf', ftTotal: tarifa, tipo: 'macaf' };
   }
   if (totalPal <= 4) {
     return { nombre: 'Eladio Chico', badge: 'tb-eladio-c', ftTotal: 0, tipo: 'eladio-c' };
@@ -317,7 +317,6 @@ function updateHint() {
   let trans = '', cls = 'hint-ok';
   if (tot === 0)      { trans = ''; }
   else if (tot < 1)   { trans = '→ MACAF Partner'; }
-  else if (tot <= 2)  { trans = '→ MACAF Camión'; }
   else if (tot <= 4)  { trans = '→ Eladio Chico'; }
   else if (tot <= 6)  { trans = '→ Eladio Grande'; }
   else if (tot <= 8)  { trans = '→ Alejandra Aros'; }
